@@ -16,31 +16,35 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Crear el usuario de prueba
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
-        // 2. Crear 5 usuarios más
         User::factory(5)->create();
 
-        // 3. Crear 10 posts (uno a uno para que el usuario sea aleatorio)
         for ($i = 0; $i < 10; $i++) {
             Post::factory()->create([
-                'user_id' => User::all()->random()->id
+                'user_id' => User::all()->random()->id,
             ]);
         }
 
-        // 4. Crear 15 comentarios (uno a uno para variar usuario y post)
         for ($i = 0; $i < 15; $i++) {
             Comment::factory()->create([
                 'user_id' => User::all()->random()->id,
-                'post_id' => Post::all()->random()->id
+                'post_id' => Post::all()->random()->id,
             ]);
         }
 
-        // 5. Los likes los dejamos igual porque el Factory ya se encarga de lo aleatorio
-        Like::factory(150)->create();
+        for ($i = 0; $i < 50; $i++) { 
+            $likeableType = collect([Post::class, Comment::class])->random();
+            $likeableId = $likeableType::all()->random()->id;
+
+            Like::firstOrCreate([
+                'user_id' => User::all()->random()->id,
+                'likeable_id' => $likeableId,
+                'likeable_type' => $likeableType,
+            ]);
+        }
     }
 }
