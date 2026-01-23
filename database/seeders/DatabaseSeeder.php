@@ -16,35 +16,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            RoleSeeder::class,
+            UserSeeder::class,
+            PostSeeder::class,
+            CommentSeeder::class,
+            LikeSeeder::class,
         ]);
-
-        User::factory(5)->create();
-
-        for ($i = 0; $i < 10; $i++) {
-            Post::factory()->create([
-                'user_id' => User::all()->random()->id,
-            ]);
-        }
-
-        for ($i = 0; $i < 15; $i++) {
-            Comment::factory()->create([
-                'user_id' => User::all()->random()->id,
-                'post_id' => Post::all()->random()->id,
-            ]);
-        }
-
-        for ($i = 0; $i < 50; $i++) { 
-            $likeableType = collect([Post::class, Comment::class])->random();
-            $likeableId = $likeableType::all()->random()->id;
-
-            Like::firstOrCreate([
-                'user_id' => User::all()->random()->id,
-                'likeable_id' => $likeableId,
-                'likeable_type' => $likeableType,
-            ]);
-        }
     }
 }
