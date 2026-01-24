@@ -18,18 +18,21 @@ class UserSeeder extends Seeder
     {
         $admin = User::factory()->create([
             'name' => 'admin',
+            'email' => 'admin@example.org',
             'password' => Hash::make('admin')
         ]);
         $admin->assignRole('admin');
 
         $user = User::factory()->create([
             'name' => 'user',
+            'email' => 'user@example.org',
             'password' => Hash::make('user')
         ]);
         $user->assignRole('user');
 
         $watcher = User::factory()->create([
             'name' => 'watcher',
+            'email' => 'watcher@example.org',
             'password' => Hash::make('watcher')
         ]);
         $watcher->assignRole('watcher');

@@ -5,9 +5,8 @@
 @section('content')
     <div class="p-6">
         <h2 class="text-3xl font-extrabold text-gray-800 mb-6">
-            Panel de Administración de Usuarios
+            Inicio
         </h2>
 
-        <x-tablaCRUD :datos="$usuarios" />
     </div>
 @endsection

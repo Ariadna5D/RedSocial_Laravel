@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+
 class UserController extends Controller
 {
     public function index()
@@ -51,7 +52,30 @@ class UserController extends Controller
     public function show(string $id) {
         $usuario = User::findOrFail($id);
 
-        return redirect()->route('user.profile')->compact($usuario);
+        return view('user.profile',compact('usuario'));
+    }
+
+    public function profile(Request $request) 
+    {
+        $usuario = $request->user(); 
+
+        return view('user.profile', compact('usuario'));
+    }
+
+    public function login() {
+
+         return redirect()->route('login');
+    }
+
+    public function register() {
+
+         return redirect()->route('register');
+    }
+
+    public function delete(string $id) {
+        $usuario = User::findOrFail($id)->delete();
+
+        return redirect()->route('user.list');
     }
 
     

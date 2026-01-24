@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
@@ -22,11 +20,24 @@
             <h1 class="text-4xl font-extrabold tracking-tight ">
                 Web <span class="text-teal-200">RedSocial</span>
             </h1>
-            
-            <nav class="space-x-6 font-bold text-2xl">
-                <a href="#" class="hover:text-teal-200 transition">Inicio</a>
-                <a href="#" class="hover:text-teal-200 transition">Perfil</a>
-                <a href="#" class="bg-teal-500 px-4 py-2 rounded-lg hover:bg-teal-400">Postear</a>
+
+            <nav class="space-x-6 font-bold text-2xl flex items-center">
+                <a href="{{ url('/') }}" class="hover:text-teal-200 transition">Inicio</a>
+
+                @auth
+                    <a href="{{ route('dashboard') }}" class="hover:text-teal-200 transition">Perfil</a>
+                    <a href="{{ route('user.list') }}" class="hover:text-teal-200 transition">Lista de Usuarios</a>
+
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="hover:text-teal-200 transition">
+                            Cerrar Sesión
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="hover:text-teal-200 transition">Login</a>
+                    <a href="{{ route('register') }}" class="hover:text-teal-200 transition">Registro</a>
+                @endauth
             </nav>
         </div>
     </header>

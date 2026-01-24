@@ -1,19 +1,24 @@
 <?php
-
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SocialController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [UserController::class, 'index'])->name('user.list');
-Route::get('/user/list', [UserController::class, 'list'])->name('user.list');
-Route::get('/user/{id}', [UserController::class, 'profile'])->name('user.profile');
+// Públicas
+Route::get('/', [SocialController::class, 'index'])->name('index');
 
+// Rutas Protegidas (Solo usuarios logueados)
+Route::middleware(['auth', 'verified'])->group(function () {
+    
+    // Tu Dashboard principal
+    Route::get('/dashboard', [UserController::class, 'profile'])->name('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    // Gestión de usuarios
+    Route::get('/user/list', [UserController::class, 'list'])->name('user.list');
+    Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
+    Route::delete('/user/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
 
-Route::middleware('auth')->group(function () {
+    // Rutas de perfil (las que trae Breeze por defecto)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
