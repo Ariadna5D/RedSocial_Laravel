@@ -1,14 +1,12 @@
 @extends('layouts.master')
 
-@section('title', 'Gestión de Usuarios')
+@section('title', 'Editar Perfil')
 
 @section('content')
     <div class="p-6">
         <h2 class="text-3xl font-extrabold text-gray-800 mb-6">
-            Panel de Administración de Usuarios
+            Configuración de Post: {{ $post->id }}
         </h2>
 
-        <x-tablaCRUD :datos="$usuarios" />
     </div>
-    
 @endsection

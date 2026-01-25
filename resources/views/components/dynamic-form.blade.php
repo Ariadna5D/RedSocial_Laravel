@@ -1,55 +1,84 @@
 @props([
-    'datos', 
-    'action', 
-    'method' => 'POST', 
-    'buttonText' => 'Guardar Cambios',
-    'exclude' => ['id', 'email_verified_at', 'created_at', 'updated_at']
+    'modelo', 
+    'accion', 
+    'metodo' => 'POST', 
+    'submitText' => 'Guardar',
+    'solo' => null,      
+    'excepto' => [],     
+    'ocultos' => []      
 ])
 
 @php
-    $datosArray = is_array($datos) ? $datos : $datos->toArray();
+    // 1. Determinar qué campos procesar
+    if ($solo) {
+        $campos = is_array($solo) ? $solo : explode(',', $solo);
+    } else {
+        $campos = $modelo->exists ? array_keys($modelo->getAttributes()) : $modelo->getFillable();
+    }
+
+    // 2. Limpiar campos prohibidos y excluidos
+    $sistema = ['id', 'created_at', 'updated_at', 'password', 'remember_token'];
+    $quitar = array_merge($sistema, (array) $excepto, array_keys($ocultos));
     
-    $campos = array_filter(array_keys($datosArray), function($key) use ($exclude) {
-        return !in_array($key, $exclude);
-    });
+    $camposFinales = array_diff($campos, $quitar);
 @endphp
 
-<form action="{{ $action }}" method="POST" class="space-y-6 bg-white p-6 rounded-xl shadow-md border border-gray-100">
+<form method="POST" action="{{ $accion }}" {{ $attributes->merge(['class' => 'space-y-6']) }}>
     @csrf
-    @if(in_array(strtoupper($method), ['PUT', 'PATCH', 'DELETE']))
-        @method($method)
-    @endif
+    @method($metodo)
+
+    {{-- CAMPOS OCULTOS --}}
+    @foreach ($ocultos as $nombre => $valor)
+        <input type="hidden" name="{{ $nombre }}" value="{{ $valor }}">
+    @endforeach
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        @foreach($campos as $campo)
+        @foreach ($camposFinales as $campo)
+            @php
+                // Valor actual del campo
+                $valor = old($campo, $modelo->$campo ?? '');
+
+                // Determinar el tipo de input (Sustituye ternarias anidadas)
+                $tipo = match(true) {
+                    str_contains($campo, 'email') => 'email',
+                    str_contains($campo, 'date') => 'date',
+                    default => 'text'
+                };
+
+                // Decidir si es un área de texto
+                $esLargo = ($campo === 'description' || $campo === 'body' || strlen($valor) > 100);
+            @endphp
+
             <div class="flex flex-col">
-                <label for="{{ $campo }}" class="text-sm font-bold text-gray-700 uppercase mb-2">
+                <label class="block font-bold text-sm text-gray-700 uppercase mb-1">
                     {{ str_replace('_', ' ', $campo) }}
                 </label>
-                
-                <input 
-                    type="{{ $campo === 'email' ? 'email' : 'text' }}" 
-                    id="{{ $campo }}" 
-                    name="{{ $campo }}" 
-                    value="{{ old($campo, $datosArray[$campo]) }}"
-                    class="rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 transition-all"
-                >
+
+                @if ($esLargo)
+                    <textarea 
+                        name="{{ $campo }}" 
+                        rows="3" 
+                        class="w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+                    >{{ $valor }}</textarea>
+                @else
+                    <input 
+                        type="{{ $tipo }}" 
+                        name="{{ $campo }}" 
+                        value="{{ $valor }}"
+                        class="w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+                    >
+                @endif
 
                 @error($campo)
-                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
         @endforeach
     </div>
 
-    {{-- Slot para el selector de roles o contenido extra --}}
-    <div class="mt-4">
-        {{ $slot }}
-    </div>
-
-    <div class="flex justify-end mt-4">
-        <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-6 rounded-lg transition-colors shadow-lg">
-            {{ $buttonText }}
+    <div class="pt-4">
+        <button type="submit" class="bg-teal-600 text-white px-8 py-2 rounded-lg font-bold hover:bg-teal-700 transition shadow-md">
+            {{ $submitText }}
         </button>
     </div>
 </form>

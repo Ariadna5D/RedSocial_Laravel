@@ -7,17 +7,16 @@
         <h2 class="text-3xl font-extrabold text-gray-800 mb-6">
             Configuración de Perfil: {{ $usuario->name }}
         </h2>
-
-        <x-dynamic-form 
-            :datos="$usuario" 
-            :action="route('user.update', $usuario)" 
-            method="PATCH"
-            :exclude="['id', 'email_verified_at', 'created_at', 'updated_at', 'role', 'roles', 'permissions']" 
+        <x-edit-form 
+            :modelo="$usuario" 
+            :accion="route('user.update', $usuario)" 
+            metodo="PATCH"
+            :excepto="['id', 'email_verified_at', 'created_at', 'updated_at', 'role', 'roles', 'permissions']" 
         >
             @can('update user')
                 <div class="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg">
                     <label for="role" class="text-sm font-bold text-teal-700 uppercase mb-2 block">
-                        Cambiar Rol de Usuario
+                        Cambiar Rol de Usuario 
                     </label>
                     <select name="role" id="role" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
                         @foreach($roles as $role)
@@ -28,6 +27,6 @@
                     </select>
                 </div>
             @endcan
-        </x-dynamic-form>
+        </x-edit-form>
     </div>
 @endsection
