@@ -8,21 +8,34 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [SocialController::class, 'index'])->name('index');
 
 // Rutas Protegidas (Solo usuarios logueados)
+// web.php
+
 Route::middleware(['auth', 'verified'])->group(function () {
     
-    // Tu Dashboard principal
+    // 1. EL DASHBOARD (Tu propio perfil)
+    // Asegúrate de que esta línea exista para corregir el error RouteNotFound
     Route::get('/dashboard', [UserController::class, 'profile'])->name('dashboard');
-    // Gestión de usuarios
-    Route::get('/user/list', [UserController::class, 'list'])->name('user.list')
-        ->middleware('permission:watch userlist');
-    Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
-    Route::delete('/user/delete/{id}', [UserController::class, 'delete'])->name('user.delete')
-        ->middleware('permission:delete user');
 
-    // Rutas de perfil (las que trae Breeze por defecto)
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // 2. LISTA DE USUARIOS (Solo con permiso específico)
+    Route::get('/user/list', [UserController::class, 'list'])
+        ->name('user.list')
+        ->middleware('permission:watch userlist');
+    
+    // 3. VER PERFIL AJENO (Solo Admin o Moderador)
+    // Usamos el middleware 'role' de Spatie
+    Route::get('/user/{user}', [UserController::class, 'show'])
+        ->name('user.profile')
+        ->middleware('role:admin|moderator');
+    
+    // 4. ACTUALIZAR (Solo Admin)
+    Route::patch('/user/{user}', [UserController::class, 'update'])
+        ->name('user.update')
+        ->middleware('role:admin');
+
+    // 5. ELIMINAR (Solo con permiso)
+    Route::delete('/user/delete/{user}', [UserController::class, 'delete'])
+        ->name('user.delete')
+        ->middleware('permission:delete user');
 });
 
 require __DIR__.'/auth.php';

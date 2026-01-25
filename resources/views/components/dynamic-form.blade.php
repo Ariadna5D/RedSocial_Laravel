@@ -7,10 +7,8 @@
 ])
 
 @php
-    // Convertimos a array si es un objeto de Eloquent
     $datosArray = is_array($datos) ? $datos : $datos->toArray();
     
-    // Filtramos los campos que no queremos que sean editables
     $campos = array_filter(array_keys($datosArray), function($key) use ($exclude) {
         return !in_array($key, $exclude);
     });
@@ -34,7 +32,7 @@
                     id="{{ $campo }}" 
                     name="{{ $campo }}" 
                     value="{{ old($campo, $datosArray[$campo]) }}"
-                    class="rounded-lg border-gray-300 shadow-sm focus:ring-teal-500 transition-all"
+                    class="rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 transition-all"
                 >
 
                 @error($campo)
@@ -42,6 +40,11 @@
                 @enderror
             </div>
         @endforeach
+    </div>
+
+    {{-- Slot para el selector de roles o contenido extra --}}
+    <div class="mt-4">
+        {{ $slot }}
     </div>
 
     <div class="flex justify-end mt-4">

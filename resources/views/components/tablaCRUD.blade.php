@@ -17,9 +17,11 @@
                 <th class="px-6 py-3 text-center text-xs font-bold text-white uppercase tracking-wider">
                     {{ 'Ver' }}
                 </th>
-                <th class="px-6 py-3 text-center text-xs font-bold text-white uppercase tracking-wider">
-                    {{ 'Eliminar' }}
-                </th>
+                
+                    <th class="px-6 py-3 text-center text-xs font-bold text-white uppercase tracking-wider">
+                        {{ 'Eliminar' }}
+                    </th>
+                
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -34,19 +36,19 @@
                     <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-700">
                         <!-- CAMBIAR LA RUTA DETALLES -->
                         @can('watch user')
-                        <a href="{{ route('user.profile', $fila['ID']) }}"
-                            class="inline-block bg-teal-500 text-white text-xl rounded-lg px-4 py-2 transition-all duration-300 transform scale-100 hover:bg-teal-400 hover:scale-105 hover:shadow-md">
-                            Ver
-                        </a>
+                            <a href="{{ route('user.profile', $fila['ID']) }}"
+                                class="inline-block bg-teal-500 text-white text-xl rounded-lg px-4 py-2 transition-all duration-300 transform scale-100 hover:bg-teal-400 hover:scale-105 hover:shadow-md">
+                                Ver
+                            </a>
                         @endcan
                     </td>
                     <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-700">
                         <!-- CAMBIAR LA RUTA BORRADO -->
-                        @can('delete user')                            
-                        <a href="{{ route('user.delete', $fila['ID']) }}"
-                            class="inline-block bg-red-500 text-white text-xl rounded-lg px-4 py-2 transition-all duration-300 transform scale-100 hover:bg-red-400 hover:scale-105 hover:shadow-md">
-                            Borrar
-                        </a>
+                        @can('delete user')
+                            <a href="{{ route('user.delete', $fila['ID']) }}"
+                                class="inline-block bg-red-500 text-white text-xl rounded-lg px-4 py-2 transition-all duration-300 transform scale-100 hover:bg-red-400 hover:scale-105 hover:shadow-md">
+                                Borrar
+                            </a>
                         @endcan
                     </td>
                 </tr>
