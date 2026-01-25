@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -49,18 +49,21 @@ class UserController extends Controller
         return redirect()->route('user.list')->with('success', 'Usuario creado');
     }
 
-    public function show(string $id) {
-        $usuario = User::findOrFail($id);
+public function profile(Request $request) 
+{
+    $usuario = $request->user(); 
 
-        return view('user.profile',compact('usuario'));
-    }
+    return view('user.profile', compact('usuario'));
+}
 
-    public function profile(Request $request) 
-    {
-        $usuario = $request->user(); 
+public function show(string $id) 
+{
+    $usuario = User::findOrFail($id);
 
-        return view('user.profile', compact('usuario'));
-    }
+    Gate::authorize('view', $usuario);
+
+    return view('user.profile', compact('usuario'));
+}
 
     public function login() {
 

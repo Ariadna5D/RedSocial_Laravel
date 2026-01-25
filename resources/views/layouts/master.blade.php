@@ -26,7 +26,10 @@
 
                 @auth
                     <a href="{{ route('dashboard') }}" class="hover:text-teal-200 transition">Perfil</a>
+
+                    @can('watch userlist')
                     <a href="{{ route('user.list') }}" class="hover:text-teal-200 transition">Lista de Usuarios</a>
+                    @endcan
 
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf

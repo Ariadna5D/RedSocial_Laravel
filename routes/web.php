@@ -12,11 +12,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Tu Dashboard principal
     Route::get('/dashboard', [UserController::class, 'profile'])->name('dashboard');
-
     // Gestión de usuarios
-    Route::get('/user/list', [UserController::class, 'list'])->name('user.list');
+    Route::get('/user/list', [UserController::class, 'list'])->name('user.list')
+        ->middleware('permission:watch userlist');
     Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
-    Route::delete('/user/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
+    Route::delete('/user/delete/{id}', [UserController::class, 'delete'])->name('user.delete')
+        ->middleware('permission:delete user');
 
     // Rutas de perfil (las que trae Breeze por defecto)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

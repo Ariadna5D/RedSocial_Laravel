@@ -30,18 +30,18 @@ class UserSeeder extends Seeder
         ]);
         $user->assignRole('user');
 
-        $watcher = User::factory()->create([
-            'name' => 'watcher',
-            'email' => 'watcher@example.org',
-            'password' => Hash::make('watcher')
+        $moderator = User::factory()->create([
+            'name' => 'mod',
+            'email' => 'moderator@example.org',
+            'password' => Hash::make('moderator')
         ]);
-        $watcher->assignRole('watcher');
+        $moderator->assignRole('moderator');
 
         for ($i=0; $i < 10; $i++) { 
             $curUser = User::factory()->create();
             $curUser->assignRole('admin');
             $curUser = User::factory()->create();
-            $curUser->assignRole('watcher');
+            $curUser->assignRole('moderator');
             $curUser = User::factory()->create();
             $curUser->assignRole('user');
         }

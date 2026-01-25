@@ -37,7 +37,7 @@
                 Entrar
             </button>
 
-            <a href="{{ url('/') }}" class="w-full text-center bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition">
+            <a href="{{ route('index') }}" class="w-full text-center bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition">
                 Explorar como Invitado
             </a>
         </div>
