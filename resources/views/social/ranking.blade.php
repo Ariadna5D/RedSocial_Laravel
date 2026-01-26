@@ -5,8 +5,8 @@
 @section('content')
     <div class="p-6">
         <h2 class="text-3xl font-extrabold text-gray-800 mb-6">
-            Inicio
+            Ranking
         </h2>
-
+        <x-tabla :datos="$usuarios" />
     </div>
 @endsection

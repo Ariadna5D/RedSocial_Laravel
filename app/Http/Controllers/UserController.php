@@ -15,7 +15,6 @@ public function list(Request $request)
     // 1. Obtenemos el paginador original
     $usuariosPaginados = User::with('roles')->paginate($porPagina)->withQueryString();
 
-    // 2. Transformamos los datos internos pero MANTENEMOS el objeto paginador
     $usuariosPaginados->setCollection(
         $usuariosPaginados->getCollection()->map(function ($usuario) {
             return [
@@ -65,7 +64,7 @@ public function list(Request $request)
             $user->syncRoles($request->role);
         }
 
-        return back()->with('success', '¡Perfil actualizado!');
+        return back()->with('success', 'Perfil actualizado!');
     }
 
     public function delete(User $user)
@@ -74,4 +73,21 @@ public function list(Request $request)
 
         return redirect()->route('user.list')->with('success', 'Usuario eliminado');
     }
+
+public function likes()
+{
+    $usuarios = User::select('id', 'name') // Solo traemos lo necesario
+    ->withCount('likes')             // Cuenta los registros en la tabla 'likes' vinculados al user_id
+    ->orderBy('likes_count', 'desc') // Ordenamos de mayor a menor
+    ->get()
+    ->map(function ($usuario, $index) { // Añadimos $index aquí
+            return [
+                'Puesto' => $index + 1, // Número incremental
+                'Nombre' => $usuario->name,
+                'Likes'  => $usuario->likes_count
+            ];
+        });
+
+    return view('social.ranking', ['usuarios' => $usuarios]);
+}
 }

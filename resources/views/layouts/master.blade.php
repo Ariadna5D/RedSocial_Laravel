@@ -24,6 +24,7 @@
         <nav class="flex items-center gap-8">
             <div class="flex items-center gap-6 font-bold text-xl">
                 <a href="{{ url('/') }}" class="hover:text-teal-200 transition">Inicio</a>
+                <a href="{{ route('ranking') }}" class="hover:text-teal-200 transition">Ranking</a>
                 @auth
                     <a href="{{ route('dashboard') }}" class="hover:text-teal-200 transition">Perfil</a>
                     @can('watch userlist')

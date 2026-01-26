@@ -9,6 +9,8 @@ Route::get('/', [PostController::class, 'index'])->name('index');
 
 Route::get('/post/{post}', [PostController::class, 'show'])->name('posts.show');
 
+Route::get('/ranking', [UserController::class, 'likes'])->name('ranking');
+
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // 1. EL DASHBOARD (Tu propio perfil)
