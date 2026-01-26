@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -45,9 +46,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('posts.edit')
         ->middleware('permission:edit post');
 
+    Route::patch('/posts/{post}/edit', [PostController::class, 'edit'])
+        ->name('posts.update')
+        ->middleware('permission:edit post');
+
     Route::delete('/posts/{post}', [PostController::class, 'delete'])
-        ->name('posts.destroy')
+        ->name('posts.delete')
         ->middleware('permission:delete post');
+
+    Route::post('/comments/{comment}/like', [CommentController::class, 'like'])->name('comments.like');
+    Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
 
 require __DIR__.'/auth.php';

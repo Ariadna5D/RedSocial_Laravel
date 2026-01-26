@@ -21,9 +21,10 @@ class PostController extends Controller
         return back()->with('success', '¡Acción de like procesada!');
     }
 
-    public function edit(Post $post)
-    {
-
+    public function edit(Request $request, Post $post)
+    {   
+        $post->update($request->all());
+        return view('social.post-edit', compact('post'));
     }
 
     
@@ -34,10 +35,15 @@ class PostController extends Controller
         return redirect()->route('index')->with('success', 'Post Eliminado');
     }
 
-    public function show(Post $post) 
-    {
-        $post->load('user'); 
-        
-        return view('social.post-detail', compact('post'));
-    }
+public function show(Post $post) 
+{
+    $post->load([
+        'user', 
+        'comments' => function($query) {
+            $query->with('user')->withCount('likes'); // Carga autor y cuenta likes del comentario
+        }
+    ]); 
+    
+    return view('social.post-detail', compact('post'));
+}
 }

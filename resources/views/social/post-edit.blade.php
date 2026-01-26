@@ -1,0 +1,16 @@
+@extends('layouts.master')
+
+@section('title', 'Editar Perfil')
+
+@section('content')
+    <div class="p-6">
+        <h2 class="text-3xl font-extrabold text-gray-800 mb-6">
+            Editar Post: {{ $post->id }}
+        </h2>
+        <x-dynamic-form 
+        :modelo="$post" 
+        :accion="route('posts.update', $post)" 
+        metodo="PATCH" 
+        submitText="Actualizar Post" />
+    </div>
+@endsection
