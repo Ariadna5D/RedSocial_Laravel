@@ -18,6 +18,7 @@ return new class extends Migration
               ->onDelete('cascade');
             $table->string('title', 100);
             $table->string('description', 600);
+            $table->string('edited_by', 100)->nullable();
             $table->timestamps();
         });
     }

@@ -3,19 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 
 class CommentController extends Controller
 {
     /**
      * Procesa el Like en un comentario usando relación polimórfica.
      */
-    public function like(Comment $comment): RedirectResponse
+    // CommentController.php - Método like corregido
+    public function like(Request $request, Comment $comment): RedirectResponse
     {
-        // El método likes() viene de tu MorphMany en el modelo
         $like = $comment->likes()->where('user_id', auth()->id())->first();
 
         if ($like) {
@@ -34,7 +33,6 @@ class CommentController extends Controller
      */
     public function edit(Request $request, Comment $comment)
     {
-        // Laravel 11: Gate::authorize lanza automáticamente el 403 si falla
         // Permite editar si es el dueño O tiene el permiso
         Gate::authorize('update-comment', $comment);
 
@@ -48,11 +46,11 @@ class CommentController extends Controller
 
         $comment->update([
             'reply' => $validated['reply'],
-            'edited_by' => auth()->user()->name // Usamos el campo de tu migración
+            'edited_by' => auth()->user()->getRoleNames()->first() ?? 'Usuario', 
         ]);
 
         return redirect()->route('posts.show', $comment->post_id)
-                         ->with('success', 'Comentario actualizado.');
+            ->with('success', 'Comentario actualizado.');
     }
 
     /**
@@ -67,6 +65,6 @@ class CommentController extends Controller
         $comment->delete();
 
         return redirect()->route('posts.show', $postId)
-                         ->with('success', 'Comentario eliminado.');
+            ->with('success', 'Comentario eliminado.');
     }
 }

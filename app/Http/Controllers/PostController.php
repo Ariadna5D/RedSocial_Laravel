@@ -21,13 +21,28 @@ class PostController extends Controller
         return back()->with('success', '¡Acción de like procesada!');
     }
 
-    public function edit(Request $request, Post $post)
-    {   
-        $post->update($request->all());
+    public function edit(Post $post)
+    {
         return view('social.post-edit', compact('post'));
     }
 
-    
+    public function update(Request $request, Post $post)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:100',
+            'description' => 'required|string|max:600',
+        ]);
+
+        $post->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'edited_by' => auth()->user()->getRoleNames()->first() ?? 'Usuario',
+        ]);
+
+        return redirect()->route('posts.show', $post->id)
+            ->with('success', 'Post actualizado correctamente.');
+    }
+
     public function delete(Post $post)
     {
         $post->delete();
@@ -35,15 +50,15 @@ class PostController extends Controller
         return redirect()->route('index')->with('success', 'Post Eliminado');
     }
 
-public function show(Post $post) 
-{
-    $post->load([
-        'user', 
-        'comments' => function($query) {
-            $query->with('user')->withCount('likes'); // Carga autor y cuenta likes del comentario
-        }
-    ]); 
-    
-    return view('social.post-detail', compact('post'));
-}
+    public function show(Post $post)
+    {
+        $post->load([
+            'user',
+            'comments' => function ($query) {
+                $query->with('user')->withCount('likes'); // Carga autor y cuenta likes del comentario
+            },
+        ]);
+
+        return view('social.post-detail', compact('post'));
+    }
 }
