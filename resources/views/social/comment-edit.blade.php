@@ -11,6 +11,7 @@
         :modelo="$comment" 
         :accion="route('comments.update', $comment)" 
         metodo="PATCH" 
+        :excepto="['user_id', 'edited_by','post_id']"
         submitText="Actualizar Comentario" />
     </div>
 @endsection

@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Post extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id', 'title', 'description'];
+
+    protected $fillable = ['title', 'description', 'edited_by', 'user_id'];
 
     public function comments(): HasMany
     {
@@ -26,5 +27,11 @@ class Post extends Model
     public function likes(): MorphMany
     {
         return $this->morphMany(Like::class, 'likeable');
+    }
+
+    public function isLikedByAuthUser(): bool
+    {
+        // Verificamos si hay un usuario autenticado y si su ID está en la colección de likes
+        return $this->likes->where('user_id', auth()->id())->isNotEmpty();
     }
 }

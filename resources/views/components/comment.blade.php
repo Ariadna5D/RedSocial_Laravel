@@ -23,44 +23,14 @@
             </div>
         </div>
 
-        {{-- Acciones Rápidas: Like de Comentario --}}
+        {{-- Slot para botones de acción (Like, Editar, Borrar) --}}
         <div class="flex items-center gap-2">
-            {{-- Nota: Necesitarás crear esta ruta en web.php --}}
-            <form action="{{ route('comments.like', $comentario->id) }}" method="POST">
-                @csrf
-                <button type="submit" class="text-[10px] text-pink-600 hover:text-pink-700 font-bold flex items-center gap-1 bg-pink-50 px-2 py-1 rounded transition-colors">
-                    ❤️ {{ $comentario->likes_count ?? $comentario->likes()->count() }}
-                </button>
-            </form>
+            {{ $slot }}
         </div>
     </div>
 
     {{-- Contenido del Comentario --}}
-    <div class="text-gray-700 text-sm leading-relaxed mb-3">
-        "{{ $comentario->reply }}" {{-- Campo definido en la migración --}}
+    <div class="text-gray-700 text-sm leading-relaxed">
+        {{ $comentario->reply }}
     </div>
-
-    {{-- Acciones de Gestión (Editar/Borrar) --}}
-    @auth
-        @if(auth()->id() === $comentario->user_id || auth()->user()->can('edit comment') || auth()->user()->can('delete comment'))
-            <div class="flex gap-2 justify-end pt-2 border-t border-gray-200/50">
-                
-                @if(auth()->id() === $comentario->user_id || auth()->user()->can('edit comment'))
-                    <x-button :href="route('comments.edit', $comentario->id)" variant="outline" size="sm" class="text-[10px] h-7 px-2 border-gray-200 text-gray-500 hover:bg-gray-100">
-                        Editar
-                    </x-button>
-                @endif
-
-                @if(auth()->id() === $comentario->user_id || auth()->user()->can('delete comment'))
-                    <form action="{{ route('comments.destroy', $comentario->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <x-button type="submit" variant="danger" size="sm" class="text-[10px] h-7 px-2" onclick="return confirm('¿Borrar comentario?')">
-                            Borrar
-                        </x-button>
-                    </form>
-                @endif
-            </div>
-        @endif
-    @endauth
 </div>

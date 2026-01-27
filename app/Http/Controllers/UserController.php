@@ -55,7 +55,7 @@ class UserController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,'.$user->id,
         ]);
 
         $user->update($request->only('name', 'email'));
@@ -76,18 +76,26 @@ class UserController extends Controller
 
     public function likes()
     {
-        $usuarios = User::select('id', 'name') 
-            ->withCount('likes')             
-            ->orderBy('likes_count', 'desc') 
+        $usuarios = User::select('id', 'name')
+            ->withCount(['postLikes', 'commentLikes'])
             ->get()
-            ->map(function ($usuario, $index) { 
-                return [
-                    'Puesto' => $index + 1, 
-                    'Nombre' => $usuario->name,
-                    'Likes'  => $usuario->likes_count
-                ];
-            });
+            ->map(function ($usuario) {
+                $usuario->total_likes = $usuario->post_likes_count + $usuario->comment_likes_count;
 
-        return view('social.ranking', ['usuarios' => $usuarios]);
+                return $usuario;
+            })
+            ->sortByDesc('total_likes')
+            ->values(); 
+
+        $configuracion = [
+            'Puesto' => 'puesto',
+            'Nombre' => 'name',
+            'Total Likes' => 'total_likes',
+        ];
+
+        return view('social.ranking', [
+            'usuarios' => $usuarios,
+            'configuracion' => $configuracion,
+        ]);
     }
 }

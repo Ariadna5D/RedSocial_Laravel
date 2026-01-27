@@ -26,8 +26,9 @@ class Comment extends Model
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    public function hasBeenModified(): bool
+    public function isLikedByAuthUser(): bool
     {
-        return $this->updated_at > $this->created_at;
+        // Verificamos si hay un usuario autenticado y si su ID está en la colección de likes
+        return $this->likes->where('user_id', auth()->id())->isNotEmpty();
     }
 }

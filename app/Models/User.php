@@ -4,16 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-use Symfony\Component\HttpFoundation\Request;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -54,6 +53,31 @@ class User extends Authenticatable
         return $this->hasMany(Like::class);
     }
 
+    // En User.php
 
+    // 1. Relación para likes en sus POSTS
+    public function postLikes()
+    {
+        return $this->hasManyThrough(Like::class, Post::class, 'user_id', 'likeable_id')
+            ->where('likeable_type', Post::class);
+    }
 
+    // 2. Relación para likes en sus COMENTARIOS
+    public function commentLikes()
+    {
+        return $this->hasManyThrough(Like::class, Comment::class, 'user_id', 'likeable_id')
+            ->where('likeable_type', Comment::class);
+    }
+
+    public function posts(): HasMany
+    {
+        // Un usuario tiene muchos posts
+        return $this->hasMany(Post::class);
+    }
+
+    public function comments(): HasMany
+    {
+        // Un usuario tiene muchos comentarios
+        return $this->hasMany(Comment::class);
+    }
 }
