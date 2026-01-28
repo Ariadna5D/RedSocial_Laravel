@@ -5,7 +5,7 @@
 @section('content')
     <div class="p-6">
         <h2 class="text-3xl font-extrabold text-gray-800 mb-6">
-            Ranking
+            Ranking de Likes
         </h2>
         <x-tabla :datos="$usuarios" :configuracion="$configuracion" />
     </div>

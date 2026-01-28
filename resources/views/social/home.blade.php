@@ -2,8 +2,6 @@
 
 @section('content')
     <div class="p-6">
-        <h2 class="text-3xl font-extrabold text-gray-800 mb-6">Inicio</h2>
-
         @auth
             <div class="mb-10 p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
                 <h3 class="text-lg font-bold mb-4 text-teal-700 uppercase tracking-wider">¿Qué estás pensando?</h3>
@@ -15,6 +13,8 @@
                 />
             </div>
         @endauth
+
+        <x-colores/>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($posts as $post)
@@ -32,15 +32,15 @@
                         {{-- USUARIO LOGUEADO: Formulario real --}}
                         <form action="{{ route('posts.like', $post->id) }}" method="POST" class="inline">
                             @csrf
-                            <x-button type="submit" variant="outline" size="sm"
+                            <x-button type="submit" variant="pink" size="sm"
                                 class="{{ $yaTieneLike ? 'bg-pink-100 text-pink-700 border-pink-200' : 'text-pink-600 border-pink-100 bg-pink-50' }}">
                                 {{ $yaTieneLike ? '❤️' : '🤍' }} {{ $post->likes_count ?? 0 }}
                             </x-button>
                         </form>
                     @else
                         {{-- VISITANTE: Botón visual que no hace nada (o puedes mandarlo a login) --}}
-                        <x-button variant="outline" size="sm"
-                            class="text-gray-400 border-gray-100 bg-gray-50 cursor-not-allowed"
+                        <x-button variant="pink" size="sm"
+                            class="text-gray-400 border-gray-100 bg-gray-50"
                             title="Debes iniciar sesión para dar like">
                             🤍 {{ $post->likes_count ?? 0 }}
                         </x-button>

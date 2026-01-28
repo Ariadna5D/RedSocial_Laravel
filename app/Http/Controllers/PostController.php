@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -33,18 +35,16 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-        // Cargamos todo de golpe para evitar que una línea pise a la anterior
         $post->load([
             'user',
             'likes',
+            'comments' => function ($query) {
+                $query->latest();
+            },
             'comments.user',
-            'comments.likes', // Cargamos los likes para saber si el usuario actual dio like
-        ])->loadCount([
-            'likes',
-        ]);
+            'comments.likes',
+        ])->loadCount(['likes']);
 
-        // Importante: Para que el contador de likes de cada COMENTARIO aparezca,
-        // necesitamos cargar ese conteo específico en la relación de comentarios.
         $post->comments->each(function ($comment) {
             $comment->loadCount('likes');
         });
@@ -52,16 +52,12 @@ class PostController extends Controller
         return view('social.post-detail', compact('post'));
     }
 
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:100',
-            'description' => 'required|string|max:600',
-        ]);
 
-        $request->user()->posts()->create($validated);
+        $request->user()->posts()->create($request->validated());
 
-        return back()->with('success', '¡Post publicado con éxito!');
+        return back()->with('success', '¡Post publicado!');
     }
 
     public function like(Post $post)
@@ -98,23 +94,11 @@ class PostController extends Controller
         return view('social.post-edit', compact('post'));
     }
 
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        // Repetimos la validación por seguridad
-        if (auth()->id() !== $post->user_id && ! auth()->user()->can('edit post')) {
-            abort(403);
-        }
-
-        $validated = $request->validate([
-            'title' => 'required|string|max:100',
-            'description' => 'required|string|max:600',
-        ]);
-
-        $post->update([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
+        $post->update(array_merge($request->validated(), [
             'edited_by' => auth()->user()->getRoleNames()->first() ?? 'Usuario',
-        ]);
+        ]));
 
         return redirect()->route('posts.show', $post->id)->with('success', 'Post actualizado.');
     }

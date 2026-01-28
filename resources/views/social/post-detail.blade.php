@@ -17,14 +17,14 @@
                     {{-- Usuario Logueado: Puede dar Like --}}
                     <form action="{{ route('posts.like', $post->id) }}" method="POST" class="inline">
                         @csrf
-                        <x-button type="submit" variant="outline" size="sm"
+                        <x-button type="submit" variant="pink" size="sm"
                             class="{{ $postLikeado ? 'bg-pink-100 text-pink-700 border-pink-200' : 'text-pink-600 border-pink-100 bg-pink-50' }}">
                             {{ $postLikeado ? '❤️' : '🤍' }} {{ $post->likes_count ?? 0 }}
                         </x-button>
                     </form>
                 @else
                     {{-- Visitante: Solo ve el contador --}}
-                    <x-button variant="outline" size="sm"
+                    <x-button variant="pink" size="sm"
                         class="text-gray-400 border-gray-100 bg-gray-50 cursor-not-allowed"
                         title="Inicia sesión para dar like">
                         🤍 {{ $post->likes_count ?? 0 }}
@@ -78,14 +78,14 @@
                             {{-- Botón Like para usuarios registrados --}}
                             <form action="{{ route('comments.like', $comentario->id) }}" method="POST" class="inline">
                                 @csrf
-                                <x-button type="submit" variant="outline"
+                                <x-button type="submit" variant="pink"
                                     class="text-[10px] h-7 px-2 {{ $comLikeado ? 'bg-pink-50 border-pink-200' : '' }}">
                                     {{ $comLikeado ? '❤️' : '🤍' }} {{ $comentario->likes_count ?? 0 }}
                                 </x-button>
                             </form>
                         @else
                             {{-- Botón Like visual para visitantes --}}
-                            <x-button variant="outline"
+                            <x-button variant="pink"
                                 class="text-[10px] h-7 px-2 text-gray-400 border-gray-100 bg-gray-50 cursor-not-allowed">
                                 🤍 {{ $comentario->likes_count ?? 0 }}
                             </x-button>
@@ -95,7 +95,7 @@
                         @auth
                             {{-- Editar/Borrar Comentario --}}
                             @if (auth()->id() === $comentario->user_id || auth()->user()->can('edit comment'))
-                                <x-button :href="route('comments.edit', $comentario->id)" variant="outline" size="sm"
+                                <x-button :href="route('comments.edit', $comentario->id)" variant="secondary" size="sm"
                                     class="text-[10px] h-7 px-2 border-gray-200 text-gray-500">
                                     Editar
                                 </x-button>

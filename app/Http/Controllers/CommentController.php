@@ -6,16 +6,16 @@ use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 
 class CommentController extends Controller
 {
     /**
      * Procesa el Like en un comentario usando relación polimórfica.
      */
-    // CommentController.php - Método like corregido
     public function like(Request $request, Comment $comment): RedirectResponse
     {
-        // SEGURIDAD LÓGICA: Evitamos que un usuario se dé like a sí mismo
         if (auth()->id() === $comment->user_id) {
             return back()->with('error', 'No puedes darte like a tu propio comentario.');
         }
@@ -46,20 +46,14 @@ public function edit(Comment $comment)
     return view('social.comment-edit', compact('comment'));
 }
 
-public function update(Request $request, Comment $comment)
+public function update(UpdateCommentRequest $request, Comment $comment)
 {
-    if (auth()->id() !== $comment->user_id && !auth()->user()->can('edit comment')) {
-        abort(403);
-    }
+    // La seguridad ya se ejecutó en el método authorize() del Request
+    // La validación ya se ejecutó en el método rules() del Request
 
-    $validated = $request->validate([
-        'reply' => 'required|string|max:200',
-    ]);
-
-    $comment->update([
-        'reply' => $validated['reply'],
+    $comment->update(array_merge($request->validated(), [
         'edited_by' => auth()->user()->getRoleNames()->first() ?? 'Usuario',
-    ]);
+    ]));
 
     return redirect()->route('posts.show', $comment->post_id)
         ->with('success', 'Comentario actualizado.');
@@ -68,15 +62,9 @@ public function update(Request $request, Comment $comment)
     /**
      * Guarda un nuevo comentario.
      */
-    public function store(Request $request)
+    public function store(StoreCommentRequest $request)
     {
-        $validated = $request->validate([
-            'post_id' => 'required|exists:posts,id',
-            'reply' => 'required|string|max:200',
-        ]);
-
-        // Usamos la relación definida en el modelo User para asignar el user_id automáticamente
-        $request->user()->comments()->create($validated);
+        $request->user()->comments()->create($request->validated());
 
         return back()->with('success', 'Comentario añadido.');
     }

@@ -3,13 +3,14 @@
 @php
     $nombreAutor = $comentario->user->name ?? 'Anónimo';
     $fecha = $comentario->created_at->diffForHumans();
-    $inicial = strtoupper(substr($nombreAutor, 0, 1));
+    $inicial = $comentario->user->pic;
+    $color = $comentario->user->theme;
 @endphp
 
 <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 mb-4 transition-all hover:border-teal-100">
     <div class="flex items-center justify-between mb-3">
         <div class="flex items-center">
-            <div class="h-8 w-8 rounded-full bg-teal-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+            <div class="h-8 w-8 rounded-full bg-{{ $color }}-300 flex items-center justify-center text-white text-xs font-bold shadow-sm">
                 {{ $inicial }}
             </div>
             <div class="ml-3">

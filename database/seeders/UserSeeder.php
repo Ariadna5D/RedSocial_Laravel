@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
         ]);
         $moderator->assignRole('moderator');
 
-        for ($i=0; $i < 10; $i++) { 
+        for ($i=0; $i < 30; $i++) { 
             $curUser = User::factory()->create();
             $curUser->assignRole('admin');
             $curUser = User::factory()->create();

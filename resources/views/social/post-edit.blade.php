@@ -5,7 +5,7 @@
 @section('content')
     <div class="p-6">
         <h2 class="text-3xl font-extrabold text-gray-800 mb-6">
-            Editar Post: {{ $post->id }}
+            Editando Post
         </h2>
         
         <x-dynamic-form 

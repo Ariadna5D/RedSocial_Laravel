@@ -18,7 +18,7 @@ class CommentSeeder extends Seeder
         $userIds = User::pluck('id');
         $postIds = Post::pluck('id');
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             Comment::factory()->create([
                 'user_id' => $userIds->random(),
                 'post_id' => $postIds->random(),

@@ -10,15 +10,15 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <title>@yield('title', 'Mi Web')</title>
+    <title>@yield('title', 'Web Colors')</title>
 </head>
 
 <body class="bg-gray-100 min-h-screen flex flex-col font-sans text-gray-900">
 
-<header class="bg-teal-600 text-white shadow-lg p-6">
+<header class="bg-gradient-to-r from-purple-400 to-teal-500 text-white shadow-lg p-6">
     <div class="container mx-auto flex justify-between items-center">
         <h1 class="text-4xl font-extrabold tracking-tight">
-            Web <span class="text-teal-200">RedSocial</span>
+            Web <span class="text-purple-200">ColorForum</span>
         </h1>
 
         <nav class="flex items-center gap-8">
@@ -66,7 +66,7 @@
         @yield('content')
     </main>
 
-    <footer class="bg-gray-800 text-gray-400 py-6 text-center text-sm">
+    <footer class="bg-teal-900 text-gray-400 py-6 text-center text-sm">
         <p>Realizado por <span class="text-white font-semibold">Ariadna Delgado Santana</span></p>
         <p class="mt-1">Proyecto Laravel</p>
     </footer>

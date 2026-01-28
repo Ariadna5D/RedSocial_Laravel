@@ -23,9 +23,25 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $imagenes = [
+        "🚀", "✨", "🔥", "🌈", "🍕", "🦾", "🎨", "🌍", "💡", "🎉", 
+        "💻", "⌨️", "🖥️", "🖱️", "💾", "📡", "🔋", "🔌", "⚙️", "🛠️",
+        "👨‍💻", "👩‍💻", "👾", "🤖", "🦾", "🧠", "🧬", "🕸️", "🔒", "🔑", 
+        "💾", "💿", "📀", "📼", "📷", "📸", "📹", "🎥", "📽️", "🎞️" 
+        ];
+            $temas = [
+        "slate", "gray",
+        "red", "orange", "amber", "yellow", "lime",
+        "green", "emerald", "teal", "cyan", "sky",
+        "blue", "indigo", "violet", "purple", "fuchsia",
+        "pink", "rose"
+    ];
+
         return [
             'name' => fake()->unique()->word() . fake()->numberBetween(10,300),
             'email' => fake()->unique()->safeEmail(),
+            'pic' => fake()->randomElement($imagenes),
+            'theme' => fake()->randomElement($temas),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),

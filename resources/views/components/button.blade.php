@@ -14,6 +14,7 @@
         'primary'   => 'bg-teal-600 text-white hover:bg-teal-700 focus:ring-teal-500',
         'secondary' => 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500',
         'danger'    => 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+        'pink'    => 'bg-pink-200/50 text-pink-700 hover:bg-pink-300 focus:ring-pink-400',
         'outline'   => 'border-2 border-teal-600 text-teal-600 hover:bg-teal-50 focus:ring-teal-500',
     ];
 

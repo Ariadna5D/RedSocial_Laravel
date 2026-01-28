@@ -18,14 +18,16 @@
     
     // Carbon (librería de fechas) nos da el formato "hace 2 horas" automáticamente
     $fecha = $modelo->created_at ? $modelo->created_at->diffForHumans() : '';
-    $inicial = strtoupper(substr($nombreAutor, 0, 1));
+
+    $inicial = $modelo->user->pic;
+    $color = $modelo->user->theme;
 
     // 2. FILTRADO DE CAMPOS EXTRA
     // Definimos qué campos NO queremos mostrar en la cuadrícula de detalles
     $clavesIgnorar = array_merge(
         [
             $titulo, $cuerpo, 'id', 'created_at', 'updated_at', 
-            'user_id', 'user', 'likes_count', 'edited_by', 'comments','likes',
+            'user_id', 'user', 'likes_count', 'edited_by', 'comments','likes','pic', 'theme'
         ],
         (array) $excepto,
     );
@@ -44,14 +46,14 @@
     $yaTieneLike = auth()->check() && $modelo->likes->where('user_id', auth()->id())->isNotEmpty();
 @endphp
 
-<div class="flex flex-col h-full bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+<div class="flex flex-col h-full bg-{{$color}}-300/30 rounded-xl border border-gray-200 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
     {{-- CUERPO DEL POST --}}
-    <div class="p-6 pb-0">
+    <div class="p-6 pb-0 ">
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
-                <div class="h-10 w-10 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold shadow-sm">
-                    {{ $inicial }}
-                </div>
+                <div class="bg-{{ $color }}-300 h-10 w-10 rounded-full  flex items-center justify-center text-white font-bold shadow-sm">
+    {{ $inicial }}
+</div>
                 <div class="ml-3">
                     <p class="text-sm font-bold text-gray-900 leading-none">{{ $nombreAutor }}</p>
                     <p class="text-xs text-gray-400 mt-1">
@@ -88,7 +90,7 @@
     </div>
 
     {{-- FOOTER / ACCIONES --}}
-    <div class="px-6 py-4 mt-auto bg-gray-50 border-t border-gray-100 rounded-b-xl">
+    <div class=" border-t-2 border-{{ $color }}-300 px-6 py-4 mt-auto bg-gray-50 border-t border-gray-100 rounded-b-xl">
         <div class="flex flex-wrap gap-2 items-center">
 
             {{-- RENDERIZADO DE BOTONES DINÁMICOS (Editar, Eliminar, Ver, etc.) --}}

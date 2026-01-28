@@ -5,7 +5,7 @@
 @section('content')
     <div class="p-6">
         <h2 class="text-3xl font-extrabold text-gray-800 mb-6">
-            Configuración de Perfil: {{ $usuario->name }}
+            Bienvenido a tu perfil {{ $usuario->name }}
         </h2>
         <x-edit-form 
             :modelo="$usuario" 
