@@ -15,52 +15,80 @@
 
 <body class="bg-gray-100 min-h-screen flex flex-col font-sans text-gray-900">
 
-<header class="bg-gradient-to-r from-purple-400 to-teal-500 text-white shadow-lg p-6">
-    <div class="container mx-auto flex justify-between items-center">
-        <h1 class="text-4xl font-extrabold tracking-tight">
-            Web <span class="text-purple-100">ColorForum</span>
-        </h1>
+    <header class="bg-gradient-to-r from-purple-400 to-teal-500 text-white shadow-lg p-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-4xl font-extrabold tracking-tight">
+                Web <span class="text-purple-100">ColorForum</span>
+            </h1>
 
-        <nav class="flex items-center gap-8">
-            <div class="flex items-center gap-6 font-bold text-2xl">
-                <a href="{{ url('/') }}" class="hover:text-white/80 hover:font-black transition-all">Inicio</a>
-                <a href="{{ route('ranking') }}" class="hover:text-white/80 hover:font-black transition-all">Ranking</a>
-                @auth
-                    <a href="{{ route('dashboard') }}" class="hover:text-white/80 hover:font-black transition-all">Perfil</a>
-                    @can('watch userlist')
-                        <a href="{{ route('user.list') }}" class="hover:text-white/80 hover:font-black transition-all">Usuarios</a>
-                    @endcan
-                @endauth
-            </div>
+            <nav class="flex items-center gap-8">
+                <div class="flex items-center gap-8 font-bold text-2xl">
+                    @php
+                        // Clase base para evitar repetición
+                        $navClass =
+                            'relative group transition-all duration-100 ease-in-out hover:scale-105 hover:text-white';
+                    @endphp
 
-            <div class="flex items-center gap-4 border-l border-teal-500 pl-8">
-                @auth
-                    <div class="flex flex-col items-end leading-tight">
-                        <span class="text-white text-base font-bold">{{ auth()->user()->name }}</span>
-                        <span class="text-teal-200 text-[10px] uppercase font-black tracking-widest">
-                            {{ auth()->user()->getRoleNames()->first() ?? 'Sin Rol' }}
-                        </span>
-                    </div>
-
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-lg font-bold shadow-md transition-all active:scale-95">
-                            Cerrar Sesión
-                        </button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="text-white hover:bg-white/10 px-4 py-2 rounded-lg text-lg font-bold transition">
-                        Iniciar Sesión
+                    <a href="{{ url('/') }}" class="{{ $navClass }}">
+                        Inicio
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-1 bg-white transition-all duration-100 group-hover:w-full"></span>
                     </a>
-                    
-                    <a href="{{ route('register') }}" class="bg-white text-teal-600 hover:bg-teal-50 px-4 py-2 rounded-lg text-lg font-bold shadow-md transition-all active:scale-95">
-                        Registrarse
+
+                    <a href="{{ route('ranking') }}" class="{{ $navClass }}">
+                        Ranking
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-1 bg-white transition-all duration-100 group-hover:w-full"></span>
                     </a>
-                @endauth
-            </div>
-        </nav>
-    </div>
-</header>
+
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="{{ $navClass }}">
+                            Perfil
+                            <span
+                                class="absolute -bottom-1 left-0 w-0 h-1 bg-white transition-all duration-100 group-hover:w-full"></span>
+                        </a>
+
+                        @can('watch userlist')
+                            <a href="{{ route('user.list') }}" class="{{ $navClass }}">
+                                Usuarios
+                                <span
+                                    class="absolute -bottom-1 left-0 w-0 h-1 bg-white transition-all duration-100 group-hover:w-full"></span>
+                            </a>
+                        @endcan
+                    @endauth
+                </div>
+
+                <div class="flex items-center gap-4 border-l border-teal-500 pl-8">
+                    @auth
+                        <div class="flex flex-col items-end leading-tight">
+                            <span class="text-white text-base font-bold">{{ auth()->user()->name }}</span>
+                            <span class="text-teal-200 text-[10px] uppercase font-black tracking-widest">
+                                {{ auth()->user()->getRoleNames()->first() ?? 'Sin Rol' }}
+                            </span>
+                        </div>
+
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-lg font-bold shadow-md transition-all active:scale-95">
+                                Cerrar Sesión
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}"
+                            class="text-white hover:bg-white/10 px-4 py-2 rounded-lg text-lg font-bold transition">
+                            Iniciar Sesión
+                        </a>
+
+                        <a href="{{ route('register') }}"
+                            class="bg-white text-teal-600 hover:bg-teal-50 px-4 py-2 rounded-lg text-lg font-bold shadow-md transition-all active:scale-95">
+                            Registrarse
+                        </a>
+                    @endauth
+                </div>
+            </nav>
+        </div>
+    </header>
 
     <main class="container mx-auto flex-grow p-6 my-8 bg-white shadow-md rounded-xl">
         @yield('content')
