@@ -90,7 +90,7 @@
     </div>
 
     {{-- FOOTER / ACCIONES --}}
-    <div class=" border-t-2 border-{{ $color }}-300 px-6 py-4 mt-auto bg-gray-50 border-t border-gray-100 rounded-b-xl">
+    <div class=" border-t-2 border-{{$color}}-300 px-6 py-4 mt-auto bg-gray-50 rounded-b-xl">
         <div class="flex flex-wrap gap-2 items-center">
 
             {{-- RENDERIZADO DE BOTONES DINÁMICOS (Editar, Eliminar, Ver, etc.) --}}

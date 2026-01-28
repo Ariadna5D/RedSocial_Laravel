@@ -18,17 +18,17 @@
 <header class="bg-gradient-to-r from-purple-400 to-teal-500 text-white shadow-lg p-6">
     <div class="container mx-auto flex justify-between items-center">
         <h1 class="text-4xl font-extrabold tracking-tight">
-            Web <span class="text-purple-200">ColorForum</span>
+            Web <span class="text-purple-100">ColorForum</span>
         </h1>
 
         <nav class="flex items-center gap-8">
-            <div class="flex items-center gap-6 font-bold text-xl">
-                <a href="{{ url('/') }}" class="hover:text-teal-200 transition">Inicio</a>
-                <a href="{{ route('ranking') }}" class="hover:text-teal-200 transition">Ranking</a>
+            <div class="flex items-center gap-6 font-bold text-2xl">
+                <a href="{{ url('/') }}" class="hover:text-white/80 hover:font-black transition-all">Inicio</a>
+                <a href="{{ route('ranking') }}" class="hover:text-white/80 hover:font-black transition-all">Ranking</a>
                 @auth
-                    <a href="{{ route('dashboard') }}" class="hover:text-teal-200 transition">Perfil</a>
+                    <a href="{{ route('dashboard') }}" class="hover:text-white/80 hover:font-black transition-all">Perfil</a>
                     @can('watch userlist')
-                        <a href="{{ route('user.list') }}" class="hover:text-teal-200 transition">Usuarios</a>
+                        <a href="{{ route('user.list') }}" class="hover:text-white/80 hover:font-black transition-all">Usuarios</a>
                     @endcan
                 @endauth
             </div>
@@ -44,16 +44,16 @@
 
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md transition-all active:scale-95">
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-lg font-bold shadow-md transition-all active:scale-95">
                             Cerrar Sesión
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="text-white hover:bg-white/10 px-4 py-2 rounded-lg text-sm font-bold transition">
+                    <a href="{{ route('login') }}" class="text-white hover:bg-white/10 px-4 py-2 rounded-lg text-lg font-bold transition">
                         Iniciar Sesión
                     </a>
                     
-                    <a href="{{ route('register') }}" class="bg-white text-teal-600 hover:bg-teal-50 px-4 py-2 rounded-lg text-sm font-bold shadow-md transition-all active:scale-95">
+                    <a href="{{ route('register') }}" class="bg-white text-teal-600 hover:bg-teal-50 px-4 py-2 rounded-lg text-lg font-bold shadow-md transition-all active:scale-95">
                         Registrarse
                     </a>
                 @endauth

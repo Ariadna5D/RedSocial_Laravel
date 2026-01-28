@@ -16,7 +16,7 @@ class LikeSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i < 150; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             $likeableType = collect([Post::class, Comment::class])->random();
             $likeableId = $likeableType::all()->random()->id;
 

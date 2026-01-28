@@ -16,18 +16,14 @@
                 <tr class="transition-colors hover:bg-teal-50">
                     @foreach($configuracion as $titulo => $campo)
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                            {{-- Lógica para el puesto --}}
                             @if($campo === 'puesto')
                                 <span class="font-bold text-gray-400">#{{ $index + 1 }}</span>
                             
-                            {{-- Lógica para campos que pueden ser arrays u objetos --}}
                             @else
                                 @php
-                                    // Intentamos sacar el valor sea objeto o array
                                     $valor = is_array($fila) ? ($fila[$campo] ?? null) : ($fila->$campo ?? null);
                                 @endphp
                                 
-                                {{-- Aquí podrías añadir lógica especial por nombre de columna --}}
                                 @if($titulo === 'Nombre')
                                     <span class="font-bold text-teal-700">{{ $valor }}</span>
                                 @else

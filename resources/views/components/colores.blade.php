@@ -9,11 +9,11 @@
 
         <div
             class="hidden 
-            border-slate-500 border-gray-500 border-zinc-500 border-neutral-500 border-stone-500
-            border-red-500 border-orange-500 border-amber-500 border-yellow-500 border-lime-500
-            border-green-500 border-emerald-500 border-teal-500 border-cyan-500 border-sky-500
-            border-blue-500 border-indigo-500 border-violet-500 border-purple-500 border-fuchsia-500
-            border-pink-500 border-rose-500">
+            border-slate-300 border-gray-300 border-zinc-300 border-neutral-300 border-stone-300
+            border-red-300 border-orange-300 border-amber-300 border-yellow-300 border-lime-300
+            border-green-300 border-emerald-300 border-teal-300 border-cyan-300 border-sky-300
+            border-blue-300 border-indigo-300 border-violet-300 border-purple-300 border-fuchsia-300
+            border-pink-300 border-rose-300">
         </div>
 
         <div
