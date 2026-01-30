@@ -33,7 +33,6 @@
                             </x-button>
                         </form>
                     @else
-                        {{-- VISITANTE: Botón visual que no hace nada (o puedes mandarlo a login) --}}
                         <x-button variant="pink" size="sm"
                             class="text-gray-400 border-gray-100 bg-gray-50"
                             title="Debes iniciar sesión para dar like">
@@ -41,12 +40,10 @@
                         </x-button>
                     @endif
 
-                    {{-- 2. BOTÓN VER MÁS (Público) --}}
                     <x-button :href="route('posts.show', $post->id)" variant="primary" size="sm">
                         Ver más
                     </x-button>
 
-                    {{-- 3. BOTONES DE GESTIÓN (Protegidos por permisos) --}}
                     @auth
                         @if (auth()->id() === $post->user_id || auth()->user()->can('edit post'))
                             <x-button :href="route('posts.edit', $post->id)" variant="secondary" size="sm">
