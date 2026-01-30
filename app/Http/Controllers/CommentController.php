@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use App\Http\Requests\StoreCommentRequest;
-use App\Http\Requests\UpdateCommentRequest;
 
 class CommentController extends Controller
 {
@@ -16,9 +15,6 @@ class CommentController extends Controller
      */
     public function like(Request $request, Comment $comment): RedirectResponse
     {
-        if (auth()->id() === $comment->user_id) {
-            return back()->with('error', 'No puedes darte like a tu propio comentario.');
-        }
 
         $like = $comment->likes()->where('user_id', auth()->id())->first();
 
@@ -38,26 +34,24 @@ class CommentController extends Controller
      */
     // CommentController.php
 
-public function edit(Comment $comment)
-{
-    if (auth()->id() !== $comment->user_id && !auth()->user()->can('edit comment')) {
-        abort(403);
+    public function edit(Comment $comment)
+    {
+        if (auth()->id() !== $comment->user_id && ! auth()->user()->can('edit comment')) {
+            abort(403);
+        }
+
+        return view('social.comment-edit', compact('comment'));
     }
-    return view('social.comment-edit', compact('comment'));
-}
 
-public function update(UpdateCommentRequest $request, Comment $comment)
-{
-    // La seguridad ya se ejecutó en el método authorize() del Request
-    // La validación ya se ejecutó en el método rules() del Request
+    public function update(UpdateCommentRequest $request, Comment $comment)
+    {
+        $comment->update(array_merge($request->validated(), [
+            'edited_by' => auth()->user()->getRoleNames()->first() ?? 'Usuario',
+        ]));
 
-    $comment->update(array_merge($request->validated(), [
-        'edited_by' => auth()->user()->getRoleNames()->first() ?? 'Usuario',
-    ]));
-
-    return redirect()->route('posts.show', $comment->post_id)
-        ->with('success', 'Comentario actualizado.');
-}
+        return redirect()->route('posts.show', $comment->post_id)
+            ->with('success', 'Comentario actualizado.');
+    }
 
     /**
      * Guarda un nuevo comentario.
@@ -72,11 +66,11 @@ public function update(UpdateCommentRequest $request, Comment $comment)
     /**
      * Elimina el comentario de forma segura.
      */
-   public function destroy(Comment $comment): RedirectResponse
+    public function destroy(Comment $comment): RedirectResponse
     {
         // SEGURIDAD MANUAL:
         // Solo puede borrarlo si es el dueño O si tiene el permiso 'delete comment'
-        if (auth()->id() !== $comment->user_id && !auth()->user()->can('delete comment')) {
+        if (auth()->id() !== $comment->user_id && ! auth()->user()->can('delete comment')) {
             abort(403, 'No tienes permiso para eliminar este comentario.');
         }
 

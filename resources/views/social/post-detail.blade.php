@@ -19,7 +19,7 @@
                         @csrf
                         <x-button type="submit" variant="pink" size="sm"
                             class="{{ $postLikeado ? 'bg-pink-100 text-pink-700 border-pink-200' : 'text-pink-600 border-pink-100 bg-pink-50' }}">
-                            {{ $postLikeado ? '❤️' : '🤍' }} {{ $post->likes_count ?? 0 }}
+                            {{ $postLikeado ? '❤︎⁠' : '♡' }} {{ $post->likes_count ?? 0 }}
                         </x-button>
                     </form>
                 @else
@@ -27,7 +27,7 @@
                     <x-button variant="pink" size="sm"
                         class="text-gray-400 border-gray-100 bg-gray-50 cursor-not-allowed"
                         title="Inicia sesión para dar like">
-                        🤍 {{ $post->likes_count ?? 0 }}
+                        ♡ {{ $post->likes_count ?? 0 }}
                     </x-button>
                 @endif
 
@@ -56,12 +56,12 @@
             </h3>
             @auth
         <div class="mb-8 p-4 bg-teal-50/50 rounded-lg border border-teal-100">
-            <x-dynamic-form 
-                :modelo="new \App\Models\Comment" 
-                :accion="route('comments.store')" 
+            <x-dynamic-form
+                :modelo="new \App\Models\Comment"
+                :accion="route('comments.store')"
                 submitText="Comentar"
                 :excepto="['user_id', 'post_id', 'edited_by']"
-                :ocultos="['post_id' => $post->id]" 
+                :ocultos="['post_id' => $post->id]"
             />
         </div>
     @endauth
@@ -69,31 +69,25 @@
                 @forelse($post->comments as $comentario)
                     <x-comment :comentario="$comentario">
                         @php
-                            // Siempre definimos la variable al inicio del componente
-                            $comLikeado =
-                                auth()->check() && $comentario->likes->where('user_id', auth()->id())->isNotEmpty();
+                            $comLikeado = auth()->check() && $comentario->likes->where('user_id', auth()->id())->isNotEmpty();
                         @endphp
 
                         @if (auth()->check())
-                            {{-- Botón Like para usuarios registrados --}}
                             <form action="{{ route('comments.like', $comentario->id) }}" method="POST" class="inline">
                                 @csrf
                                 <x-button type="submit" variant="pink"
                                     class="text-[10px] h-7 px-2 {{ $comLikeado ? 'bg-pink-50 border-pink-200' : '' }}">
-                                    {{ $comLikeado ? '❤️' : '🤍' }} {{ $comentario->likes_count ?? 0 }}
+                                    {{ $comLikeado ? '❤︎⁠' : '♡'  }} {{ $comentario->likes_count ?? 0 }}
                                 </x-button>
                             </form>
                         @else
-                            {{-- Botón Like visual para visitantes --}}
                             <x-button variant="pink"
                                 class="text-[10px] h-7 px-2 text-gray-400 border-gray-100 bg-gray-50 cursor-not-allowed">
-                                🤍 {{ $comentario->likes_count ?? 0 }}
+                                ♡ {{ $comentario->likes_count ?? 0 }}
                             </x-button>
                         @endif
 
-                        {{-- Acciones de gestión (Solo Auth) --}}
                         @auth
-                            {{-- Editar/Borrar Comentario --}}
                             @if (auth()->id() === $comentario->user_id || auth()->user()->can('edit comment'))
                                 <x-button :href="route('comments.edit', $comentario->id)" variant="secondary" size="sm"
                                     class="text-[10px] h-7 px-2 border-gray-200 text-gray-500">

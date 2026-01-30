@@ -31,7 +31,6 @@ class Post extends Model
 
     public function isLikedByAuthUser(): bool
     {
-        // Verificamos si hay un usuario autenticado y si su ID está en la colección de likes
         return $this->likes->where('user_id', auth()->id())->isNotEmpty();
     }
 }

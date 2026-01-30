@@ -31,17 +31,17 @@ class RoleSeeder extends Seeder
 
         Permission::create(['name'=>'can like']);
 
-        // Creamos el Rol
+        // creamos el Rol
         $roleAdmin = Role::create(['name' => 'admin']);
-        // Cogemos el nombre del rol
+        // cogemos el nombre del rol
         $permissionsAdmin = Permission::query()->pluck('name');
-        // Sincronizamos
+        // sincronizamos
         $roleAdmin->syncPermissions($permissionsAdmin);
 
         $roleUser = Role::create(['name' => 'user']);
         $roleUser->syncPermissions(['can like', 'create post', 'create comment']);
 
-        $roleModerator = Role::create(['name' => 'moderator']);
-        $roleModerator->syncPermissions(['can like', 'create post', 'create comment', 'watch user', 'watch userlist']);
+        $roleRevisor = Role::create(['name' => 'revisor']);
+        $roleRevisor->syncPermissions(['can like', 'create post', 'create comment', 'watch user', 'watch userlist']);
     }
 }

@@ -13,6 +13,8 @@ class PostSeeder extends Seeder
      */
     public function run(): void
     {
+        // para dar otra apariencia a la página, he generado titulos con algo más de sentido
+        // y con más sentido con la temática
         $titulosInicio = [
             'Cómo optimizar',
             'Guía definitiva sobre',

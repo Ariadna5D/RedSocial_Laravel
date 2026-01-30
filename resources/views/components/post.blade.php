@@ -9,60 +9,68 @@
 ])
 
 @php
-    // 1. PREPARACIÓN DE DATOS
-    // Convertimos a array para manejar tanto objetos Eloquent como arrays simples
+    // pasamos el modelo a array
     $datos = is_array($modelo) ? $modelo : $modelo->toArray();
 
-    // Acceso seguro al nombre del autor (evita errores si el usuario fue eliminado)
     $nombreAutor = $modelo->user->name ?? ($datos['user']['name'] ?? 'Anónimo');
-    
-    // Carbon (librería de fechas) nos da el formato "hace 2 horas" automáticamente
+
     $fecha = $modelo->created_at ? $modelo->created_at->diffForHumans() : '';
+    $fechaEdicion = $modelo->updated_at ? $modelo->updated_at->diffForHumans() : '';
 
     $inicial = $modelo->user->pic;
     $color = $modelo->user->theme;
 
-    // 2. FILTRADO DE CAMPOS EXTRA
-    // Definimos qué campos NO queremos mostrar en la cuadrícula de detalles
+    // quitamos los campos que no queremos mostrar
     $clavesIgnorar = array_merge(
         [
-            $titulo, $cuerpo, 'id', 'created_at', 'updated_at', 
-            'user_id', 'user', 'likes_count', 'edited_by', 'comments','likes','pic', 'theme'
+            $titulo,
+            $cuerpo,
+            'id',
+            'created_at',
+            'updated_at',
+            'user_id',
+            'user',
+            'likes_count',
+            'edited_by',
+            'comments',
+            'likes',
+            'pic',
+            'theme',
         ],
         (array) $excepto,
     );
 
+    // añadimos campos que quiero mostrás además de los del modelo
     $camposExtra = collect($datos)->except($clavesIgnorar);
     if ($solo) {
         $camposExtra = $camposExtra->only(is_array($solo) ? $solo : explode(',', $solo));
     }
 
-    // 3. LÓGICA DE EDICIÓN
-    // Si el campo edited_by tiene contenido, sabemos que el post fue modificado
+    // par controlar si el post ha sido editado
     $fueEditado = !empty($modelo->edited_by);
 
-    // 4. LÓGICA DE LIKE (NUEVO)
-    // Verificamos si el usuario actual ha dado like usando el método que creamos en el modelo
+    // para el like, reviso que el usuario si le ha dado like o no
     $yaTieneLike = auth()->check() && $modelo->likes->where('user_id', auth()->id())->isNotEmpty();
 @endphp
 
-<div class="flex flex-col h-full bg-{{$color}}-300/30 rounded-xl border border-gray-200 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
-    {{-- CUERPO DEL POST --}}
+<div
+    class="flex flex-col h-full bg-{{ $color }}-300/30 rounded-xl border border-gray-200 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
     <div class="p-6 pb-0 ">
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
-                <div class="bg-{{ $color }}-300 h-10 w-10 rounded-full  flex items-center justify-center text-white font-bold shadow-sm">
-    {{ $inicial }}
-</div>
+                <div
+                    class="bg-{{ $color }}-300 h-10 w-10 rounded-full  flex items-center justify-center text-white font-bold shadow-sm">
+                    {{ $inicial }}
+                </div>
                 <div class="ml-3">
                     <p class="text-sm font-bold text-gray-900 leading-none">{{ $nombreAutor }}</p>
                     <p class="text-xs text-gray-400 mt-1">
-                        {{ $fecha }}
-                        @if ($fueEditado)
-                            <span class="ml-1 text-teal-600 font-bold uppercase text-[9px] tracking-widest">
-                                • Editado por {{ $modelo->edited_by }}
-                            </span>
-                        @endif
+                    {{ $fecha }}
+                    @if ($fueEditado)
+                        <span class="ml-1 text-teal-600 font-bold uppercase text-[9px] tracking-widest">
+                            • Editado por {{ $modelo->edited_by }} ({{ $fechaEdicion }})
+                        </span>
+                    @endif
                     </p>
                 </div>
             </div>
@@ -76,12 +84,12 @@
             {{ str($datos[$cuerpo] ?? '')->limit($maxChars) }}
         </p>
 
-        {{-- CAMPOS EXTRA (Se muestran automáticamente si existen) --}}
         @if ($camposExtra->isNotEmpty())
             <div class="mt-4 py-3 border-t border-dashed border-gray-100 grid grid-cols-2 gap-2">
                 @foreach ($camposExtra as $llave => $valor)
                     <div class="text-[11px]">
-                        <span class="font-bold uppercase text-gray-400 block mb-0.5">{{ str_replace('_', ' ', $llave) }}</span>
+                        <span
+                            class="font-bold uppercase text-gray-400 block mb-0.5">{{ str_replace('_', ' ', $llave) }}</span>
                         <span class="text-gray-700">{{ $valor }}</span>
                     </div>
                 @endforeach
@@ -89,11 +97,10 @@
         @endif
     </div>
 
-    {{-- FOOTER / ACCIONES --}}
-    <div class=" border-t-2 border-{{$color}}-300 px-6 py-4 mt-auto bg-gray-50 rounded-b-xl">
+    {{-- FOOTER --}}
+    <div class=" border-t-2 border-{{ $color }}-300 px-6 py-4 mt-auto bg-gray-50 rounded-b-xl">
         <div class="flex flex-wrap gap-2 items-center">
 
-            {{-- RENDERIZADO DE BOTONES DINÁMICOS (Editar, Eliminar, Ver, etc.) --}}
             @foreach ($botones as $boton)
                 @php $metodo = $boton['metodo'] ?? 'GET'; @endphp
 
@@ -112,8 +119,6 @@
                     </form>
                 @endif
             @endforeach
-
-            {{-- El $slot permite inyectar botones personalizados desde el archivo .blade que llame al componente --}}
             {{ $slot }}
         </div>
     </div>

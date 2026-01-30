@@ -14,7 +14,7 @@ class CommentSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Array de comentarios genéricos
+        // Estos son comentarios genéricos para dar más vidilla a la web
         $comentariosFalsos = [
             "¡Excelente aporte! Me sirvió mucho.",
             "No conocía esa herramienta, gracias por compartir.",
@@ -47,7 +47,7 @@ class CommentSeeder extends Seeder
             Comment::factory()->create([
                 'user_id' => $userIds->random(),
                 'post_id' => $postIds->random(),
-                'reply'   => $textoAleatorio, 
+                'reply'   => $textoAleatorio,
             ]);
         }
     }

@@ -1,28 +1,23 @@
 @props([
-    'modelo',            // El objeto Eloquent o Array con los datos.
-    'titulo' => 'title', // El nombre de la columna que hace de título (por defecto 'title').
-    'cuerpo' => 'description', // Columna para el texto principal.
-    'maxChars' => 150,   // Si el texto es muy largo, lo corta automáticamente.
-    'footerInfo' => null,// Columna extra para mostrar abajo (ej: 'fecha').
-    'solo' => null,      // Lista blanca de campos extra a mostrar.
-    'excepto' => [],     // Lista negra de campos a ocultar.
-    'botones' => []      // Array de configuración para los botones de acción.
+    'modelo',
+    'titulo' => 'title',
+    'cuerpo' => 'description',
+    'maxChars' => 150,
+    'footerInfo' => null,
+    'solo' => null,      // lista blanca
+    'excepto' => [],     // lista negra
+    'botones' => []      // botones
 ])
 
 @php
-    // Convertimos el modelo a array para poder acceder a las llaves como $datos['columna']
     $datos = is_array($modelo) ? $modelo : $modelo->toArray();
-    
-    // FILTRADO DINÁMICO:
-    // 1. Tomamos todos los datos.
-    // 2. Quitamos los que ya usamos en el título/cuerpo y los IDs/fechas del sistema.
-    // 3. Quitamos lo que tú digas en 'excepto'.
+
     $camposExtra = collect($datos)->except(array_merge(
-        [$titulo, $cuerpo, $footerInfo, 'id', 'created_at', 'updated_at', 'deleted_at'], 
+        [$titulo, $cuerpo, $footerInfo, 'id', 'created_at', 'updated_at', 'deleted_at'],
         $excepto
     ));
 
-    // Si definiste 'solo', nos quedamos únicamente con esos.
+    // si solo tiene contenido, solo se muestra lo que ponga
     if ($solo) {
         $camposExtra = $camposExtra->only(is_array($solo) ? $solo : explode(',', $solo));
     }
@@ -59,22 +54,20 @@
             <div class="flex flex-wrap gap-2">
                 @forelse($botones as $boton)
                     @if(($boton['metodo'] ?? 'GET') === 'GET')
-                        {{-- USAMOS EL NUEVO COMPONENTE COMO ENLACE --}}
-                        <x-button 
-                            :href="$boton['ruta']" 
-                            :variant="$boton['variant'] ?? 'primary'" 
+                        <x-button
+                            :href="$boton['ruta']"
+                            :variant="$boton['variant'] ?? 'primary'"
                             size="sm"
                         >
                             {{ $boton['texto'] }}
                         </x-button>
                     @else
-                        {{-- USAMOS EL NUEVO COMPONENTE COMO BOTÓN DE FORMULARIO --}}
                         <form action="{{ $boton['ruta'] }}" method="POST" class="inline">
                             @csrf
                             @method($boton['metodo'])
-                            <x-button 
-                                type="submit" 
-                                :variant="$boton['variant'] ?? 'danger'" 
+                            <x-button
+                                type="submit"
+                                :variant="$boton['variant'] ?? 'danger'"
                                 size="sm"
                             >
                                 {{ $boton['texto'] }}

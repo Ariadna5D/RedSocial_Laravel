@@ -29,8 +29,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // --- POSTS ---
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-    
-    Route::post('/posts', [PostController::class, 'store'])->name('posts.store'); 
+
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
     Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])
@@ -44,11 +44,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::post('/comments/{comment}/like', [CommentController::class, 'like'])->name('comments.like');
 
-// GET para mostrar el formulario
 Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
 
-// PATCH para procesar la subida (Apuntando a 'update')
-Route::patch('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update'); 
+Route::patch('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
